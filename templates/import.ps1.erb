@@ -1,0 +1,16 @@
+try {
+  $ErrorActionPreference = 'Stop'
+
+  $password = ConvertTo-SecureString -String "<%= @password %>" -Force -AsPlainText
+
+  Import-PfxCertificate `
+    -FilePath '<%= @file %>' `
+    -CertStoreLocation Cert:\<%= @store %> `
+    -Password $password `
+    -verbose -ErrorAction Stop
+
+  exit 0
+} catch {
+  Write-Output $_
+  exit 1
+}
