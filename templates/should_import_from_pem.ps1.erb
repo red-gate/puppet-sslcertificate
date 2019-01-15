@@ -1,0 +1,7 @@
+$ErrorActionPreference = 'Continue'
+
+$cert_content = "<%= @cert_content %>"
+
+$cert = New-Object Security.Cryptography.X509Certificates.X509Certificate2 @(,[system.Text.Encoding]::UTF8.GetBytes($cert_content))
+
+if( Test-Path "Cert:\<%= @store %>\$($cert.Thumbprint)" ) { exit 1 }

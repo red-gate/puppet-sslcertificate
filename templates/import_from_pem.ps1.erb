@@ -1,0 +1,35 @@
+$ErrorActionPreference = 'Continue'
+
+$certfile = [System.IO.Path]::GetTempFileName()
+$keyfile = [System.IO.Path]::GetTempFileName()
+$pfxfile = [System.IO.Path]::GetTempFileName()
+
+$pfxPassword = Get-Random
+$password = ConvertTo-SecureString -String $pfxPassword -Force -AsPlainText
+
+[IO.File]::WriteAllLines(
+  $certfile,
+  "<%= @cert_content %>",
+  (New-Object System.Text.UTF8Encoding $False)
+)
+
+[IO.File]::WriteAllLines(
+  $keyfile,
+  "<%= @key_content %>",
+  (New-Object System.Text.UTF8Encoding $False)
+)
+
+C:\scripts\openssl.exe pkcs12 -in $certfile -inkey $keyfile -export -out $pfxfile -password "pass:$pfxPassword"
+
+Remove-Item $keyfile -Force
+Remove-Item $certfile -Force
+
+Import-PfxCertificate `
+  -FilePath $pfxfile `
+  -CertStoreLocation Cert:\<%= @store %> `
+  -Password $password `
+  -verbose -ErrorAction Stop
+
+Remove-Item $pfxfile -Force
+
+if($error) { exit 1 } else { exit 0 }
