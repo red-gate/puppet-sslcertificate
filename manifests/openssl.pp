@@ -7,11 +7,11 @@ class sslcertificate::openssl {
     source_permissions => ignore,
   }
   file { 'C:/scripts/libcrypto-1_1.dll':
-    source => 'puppet:///modules/sslcertificate/openssl.exe',
+    source => 'puppet:///modules/sslcertificate/libcrypto-1_1.dll',
     source_permissions => ignore,
   }
   file { 'C:/scripts/libssl-1_1.dll':
-    source => 'puppet:///modules/sslcertificate/openssl.exe',
+    source => 'puppet:///modules/sslcertificate/libssl-1_1.dll',
     source_permissions => ignore,
   }
 }
