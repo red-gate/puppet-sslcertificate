@@ -1,5 +1,11 @@
 $ErrorActionPreference = 'Continue'
 
+if($env:USERNAME -eq "$($env:COMPUTERNAME)`$") {
+    # Workaround issues when running puppet as LocalSystem
+    # (we can't to write to the default TEMP folder for LocalSystem... 😭)
+    $env:TEMP = $env:TMP = $env:SYSTEMROOT + '\Temp'
+}
+
 $certfile = [System.IO.Path]::GetTempFileName()
 $keyfile = [System.IO.Path]::GetTempFileName()
 $pfxfile = [System.IO.Path]::GetTempFileName()
