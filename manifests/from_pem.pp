@@ -1,5 +1,5 @@
 # Install a SSL cert using PEM format. Windows only.
-define sslcertificate::from_pem($cert_content, $key_content, $store = 'LocalMachine\My', $exportable = False) {
+define sslcertificate::from_pem($cert_content, $key_content, $store = 'LocalMachine\My', $exportable = false) {
 
   require ::sslcertificate::openssl
 
