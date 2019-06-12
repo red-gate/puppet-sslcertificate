@@ -33,7 +33,7 @@ Remove-Item $certfile -Force
 Import-PfxCertificate `
   -FilePath $pfxfile `
   -CertStoreLocation Cert:\<%= @store %> `
-  -Password $password `
+  -Password $password <%= @exportable_flag %> `
   -verbose -ErrorAction Stop
 
 Remove-Item $pfxfile -Force
