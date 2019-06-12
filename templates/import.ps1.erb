@@ -6,7 +6,7 @@ try {
   Import-PfxCertificate `
     -FilePath '<%= @file %>' `
     -CertStoreLocation Cert:\<%= @store %> `
-    -Password $password `
+    -Password $password <%= @exportable_flag %>`
     -verbose -ErrorAction Stop
 
   exit 0

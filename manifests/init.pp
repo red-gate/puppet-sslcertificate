@@ -31,9 +31,15 @@
 #    store      => 'LocalMachine\CA',
 #    thumbprint => '07E5C1AF7F5223CB975CC29B5455642F5570798B'
 #  }
-define sslcertificate($password, $thumbprint, $file = $title, $store = 'LocalMachine\My') {
+define sslcertificate($password, $thumbprint, $file = $title, $store = 'LocalMachine\My', $exportable = false) {
   validate_re($thumbprint, '^(.)+$', "Must pass a certificate thumbprint to ${module_name}[${title}]")
 
+  if ($exportable) {
+    $exportable_flag = "-Exportable"
+  } else {
+    $exportable_flag = ""
+  }
+  
   exec { "Install-${file}-SSLCert-to-${store}":
     provider  => powershell,
     command   => template('sslcertificate/import.ps1.erb'),
