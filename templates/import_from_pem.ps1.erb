@@ -25,7 +25,7 @@ $password = ConvertTo-SecureString -String $pfxPassword -Force -AsPlainText
   (New-Object System.Text.UTF8Encoding $False)
 )
 
-C:\scripts\openssl.exe pkcs12 -in $certfile -inkey $keyfile -export -out $pfxfile -password "pass:$pfxPassword" <%= @exportable_flag %>
+C:\scripts\openssl.exe pkcs12 -in $certfile -inkey $keyfile -export -out $pfxfile -password "pass:$pfxPassword"
 
 Remove-Item $keyfile -Force
 Remove-Item $certfile -Force
@@ -33,7 +33,7 @@ Remove-Item $certfile -Force
 Import-PfxCertificate `
   -FilePath $pfxfile `
   -CertStoreLocation Cert:\<%= @store %> `
-  -Password $password `
+  -Password $password <%= @exportable_flag %> `
   -verbose -ErrorAction Stop
 
 Remove-Item $pfxfile -Force
