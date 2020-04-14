@@ -1,0 +1,7 @@
+$ErrorActionPreference = 'Continue'
+
+$cert = New-Object Security.Cryptography.X509Certificates.X509Certificate2 @(,[system.Text.Encoding]::UTF8.GetBytes("<%= @cert_content %>"))
+
+$cert_cn = $cert.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+
+if (!(Get-ChildItem Cert:\\<%= @store %> | Where-Object { ($_.NotAfter -lt ((get-date).AddDays(-30))) -and ($_.Subject -match $cert_cn) })) {Exit 1}
