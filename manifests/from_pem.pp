@@ -20,7 +20,7 @@ define sslcertificate::from_pem($cert_content, $key_content, $store = 'LocalMach
     exec { "${title}_RemoveExpiredCerts":
       provider  => 'powershell',
       command   => template('sslcertificate/remove_expired_certs.ps1.erb'),
-      onlyif    => template('sslcertificate/should_remove_expired_certs.ps1erb'),
+      onlyif    => template('sslcertificate/should_remove_expired_certs.ps1.erb'),
       logoutput => true,
     }
   }
