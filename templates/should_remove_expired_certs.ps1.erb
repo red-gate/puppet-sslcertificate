@@ -1,0 +1,16 @@
+$ErrorActionPreference = 'Continue'
+
+$cert = New-Object Security.Cryptography.X509Certificates.X509Certificate2 @(,[system.Text.Encoding]::UTF8.GetBytes("<%= @cert_content %>"))
+
+function Get-CertName($certificate) {
+    $certificate.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+}
+
+$cert_cn = Get-CertName $cert
+
+function Test-ShouldBeRemoved($certificate) {
+    ($certificate.NotAfter -lt ((get-date).AddDays(-30))) -and (Get-CertName $certificate) -eq $cert_cn
+}
+
+
+if (!(Get-ChildItem Cert:\\<%= @store %> | Where-Object { Test-ShouldBeRemoved $_ })) { exit 1 }
