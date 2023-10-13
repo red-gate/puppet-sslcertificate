@@ -19,7 +19,7 @@ define sslcertificate::from_pem (
   String $cert_content,
   String $key_content,
   String $store = 'LocalMachine\My',
-  String $exportable = false,
+  Boolean $exportable = false,
   Boolean $remove_expired_certs = true
 ) {
   require sslcertificate::openssl
