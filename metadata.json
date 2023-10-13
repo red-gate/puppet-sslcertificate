@@ -1,6 +1,6 @@
 {
   "name":         "puppet-sslcertificate",
-  "version":      "1.0.0",
+  "version":      "1.0.1",
   "author":       "red-gate",
   "license":      "Apache-2.0",
   "summary":      "Module to manage SSL Certificates on Windows Server 2012+",
@@ -10,13 +10,13 @@
   "operatingsystem_support": [
     {
       "operatingsystem": "windows",
-      "operatingsystemrelease": ["2012","2012 R2"]
+      "operatingsystemrelease": ["2012 R2","2016","2019","2022"]
     }
   ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 3.0.0 <7.0.0"
+      "version_requirement": ">= 9.4.0"
     }
   ]
 }

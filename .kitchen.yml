@@ -1,0 +1,83 @@
+# Test installations of SSMS
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: puppet_apply
+  custom_options: <%= ENV['PUPPET_COLOR'] %>
+  puppet_debug: <%= ENV['PUPPET_DEBUG'] %>
+  manifests_path: spec/manifests
+  modules_path: .kitchen-modules
+  require_chef_for_busser: false
+  resolve_with_librarian_puppet: false
+  puppet_detailed_exitcodes: true
+  require_puppet_collections: true
+  puppet_detailed_exitcodes: true
+  max_retries: 3
+  wait_for_retry: 40
+  retry_on_exit_code:
+    - 2 # The run succeeded, and some resources were changed.
+    - 6 # The run succeeded, and included both changes and failures.
+
+transport:
+  name: winrm
+  elevated: true
+
+verifier:
+  name: shell
+
+platforms:
+  - name: windows-2016-core
+    driver_plugin: vagrant
+    driver_config:
+      box: red-gate/windows-2016-core
+    provisioner:
+      puppet_version: "6.28.0"
+    transport:
+      name: winrm
+      winrm_transport: plaintext
+  - name: windows-2019-core
+    driver_plugin: vagrant
+    driver_config:
+      box: red-gate/windows-2019-core
+      customize:
+        cpus: 2
+        memory: 4096
+        vrde: "off"
+        vram: 64
+    provisioner:
+      puppet_version: "6.28.0"
+    transport:
+      name: winrm
+      winrm_transport: plaintext
+  - name: windows-2022-core
+    driver_plugin: vagrant
+    driver_config:
+      box: red-gate/windows-2022-core
+      customize:
+        cpus: 2
+        memory: 4096
+        vrde: "off"
+        vram: 64
+    provisioner:
+      puppet_version: "6.28.0"
+    transport:
+      name: winrm
+      winrm_transport: plaintext
+  - name: windows-2012r2
+    driver_plugin: vagrant
+    driver_config:
+      box: red-gate/windows-2012r2
+    provisioner:
+      puppet_version: "6.28.0"
+    transport:
+      name: winrm
+      winrm_transport: plaintext
+
+suites:
+  - name: windows_tests
+    provisioner:
+      manifest: windows.pp
+    verifier:
+      command: rspec -c -f d -I spec spec/acceptance/windows.rb
