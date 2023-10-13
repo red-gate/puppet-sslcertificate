@@ -1,0 +1,57 @@
+$certStorePath = "<%= @store %>"
+$identity = "<%= @identity %>"
+$certThumbprint = "<%= @cert_thumbprint %>"
+$permission = "<%= @permission %>"
+$type = "<%= @type %>"
+
+$certificate = Get-ChildItem Cert:\$certStorePath | Where thumbprint -eq $certThumbprint
+
+if ($certificate -eq $null)
+{
+    $message="Certificate with thumbprint:"+$certThumbprint+" does not exist at "+$certStorePath
+    Write-Host $message -ForegroundColor Red
+    exit 1;
+}else
+{
+    $rsaCert = [System.Security.Cryptography.X509Certificates.RSACertificateExtensions]::GetRSAPrivateKey($certificate)
+    $fileName = $rsaCert.key.UniqueName
+    
+    # Private key could be in one of two locations. Test both paths.
+    # More recent Windows versions use Crypto\Keys\, where older ones use Crypto\RSA\
+    $path = "$env:ALLUSERSPROFILE\Microsoft\Crypto\Keys\$fileName"
+    $path2 = "$env:ALLUSERSPROFILE\Microsoft\Crypto\RSA\MachineKeys\$fileName"    
+    
+    if(test-path $path)
+    {
+        $certpath = $path
+    }
+    elseif(test-path $path2)
+    {
+        $certpath = $path2
+    }
+    else
+    {
+        Write-Host "Could not file private key file" -ForegroundColor Red
+        exit 1;
+    }
+
+    $currentaccess = (get-acl -path $certpath).Access
+
+    write-host "current access"
+    Write-Host $currentaccess
+
+    if($currentaccess.IdentityReference.value.contains($identity))
+    {
+        Write-Host "Contains identity"
+        $curidentity = $currentaccess | where_object {$_.ItentityReference -eq $identity}
+        if($curidentity.AccessControlType -eq $type -and $curidentity.FilesystemRights -eq $permission)
+        {
+            Write-Host $curidentity
+            Write-Host "Type is $type and rights are $permission"
+            #It's what we want.
+            exit 1;
+        }
+    }   
+}
+
+exit 0;

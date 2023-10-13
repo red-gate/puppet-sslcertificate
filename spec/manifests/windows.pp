@@ -87,3 +87,9 @@ sslcertificate::from_pem { 'test-cert':
   cert_content => $certcontent,
   key_content  => $keycontent,
 }
+
+sslcertificate::key_acl { 'Vagrant_read_test_cert':
+  identity        => 'vagrant',
+  cert_thumbprint => '1822371B4C27B4683BADBADC91AFFE33732CFC55',
+  require         => Sslcertificate::From_Pem['test-cert'],
+}
