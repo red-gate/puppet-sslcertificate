@@ -8,6 +8,7 @@ require 'bundler/setup'
 destroy_strategy = ENV['TEAMCITY_VERSION'] ? 'always' : 'passing'
 color = ENV['TEAMCITY_VERSION'] ? '--no-color' : '--color'
 ENV['PUPPET_COLOR'] = '--color false' if ENV['TEAMCITY_VERSION']
+rootdir = File.dirname(__FILE__)
 
 namespace :acceptance do
   desc 'Install puppet modules from Puppetfile'
@@ -32,7 +33,7 @@ namespace :check do
   namespace :manifests do
     desc 'Validate syntax for all manifests'
     task :syntax do
-      Bundler.with_clean_env  do
+      Bundler.with_unbundled_env  do
         # Use bundler.with_clean_env as the way bundler set ruby environment variables
         # is killing puppet on windows.
         sh "puppet parser validate #{rootdir}"
