@@ -37,16 +37,26 @@ if ($certificate -eq $null)
 
     $currentaccess = (get-acl -path $certpath).Access
 
-    write-host "current access"
-    Write-Host $currentaccess
+    Write-Host "Current access:"
+    $currentaccess.IdentityReference
 
-    if($currentaccess.IdentityReference.value.contains($identity))
+    Write-Host "testing for: $identity"
+
+    if($currentaccess.IdentityReference.value -contains $identity)
     {
-        Write-Host "Contains identity"
-        $curidentity = $currentaccess | where_object {$_.ItentityReference -eq $identity}
-        if($curidentity.AccessControlType -eq $type -and $curidentity.FilesystemRights -eq $permission)
+        Write-Host "Current access contains the identity we're checking"
+        $curidentity = $currentaccess | Where-Object {$_.IdentityReference -eq $identity}
+        if($type -eq "Allow"){
+            $permission_to_check = "$permission, Synchronize"
+        }
+        else
         {
-            Write-Host $curidentity
+            $permission_to_check = $permission
+        }
+
+        if($curidentity.AccessControlType -eq $type -and $curidentity.FilesystemRights -eq $permission_to_check)
+        {
+            $curidentity | fl
             Write-Host "Type is $type and rights are $permission"
             #It's what we want.
             exit 1;
