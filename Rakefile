@@ -17,7 +17,7 @@ namespace :acceptance do
   end
 
   desc 'Execute the acceptance tests'
-  task kitchen: [:prerequisites, :installpuppetmodules] do
+  task kitchen: [:installpuppetmodules] do
     begin
       Dir.mkdir('.kitchen') unless Dir.exist?('.kitchen')
       sh "kitchen test --destroy=#{destroy_strategy} --concurrency 2 --log-level=info #{color} 2> .kitchen/kitchen.stderr" do |ok, _|
