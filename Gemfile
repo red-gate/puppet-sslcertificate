@@ -1,64 +1,18 @@
-source ENV['GEM_SOURCE'] || "https://rubygems.org"
+source 'https://rubygems.org'
 
-def location_for(place, fake_version = nil)
-  if place =~ /^(git[:@][^#]*)#(.*)/
-    [fake_version, { :git => $1, :branch => $2, :require => false }].compact
-  elsif place =~ /^file:\/\/(.*)/
-    ['>= 0', { :path => File.expand_path($1), :require => false }]
-  else
-    [place, { :require => false }]
-  end
-end
+gem 'puppet-lint'
 
-group :test do
-  gem 'rake',                                                       :require => false
-  gem 'rspec-puppet',                                               :require => false, :git => 'https://github.com/rodjek/rspec-puppet.git'
-  gem 'puppet-lint',                                                :require => false, :git => 'https://github.com/rodjek/puppet-lint.git'
-  gem 'metadata-json-lint',                                         :require => false
-  gem 'rspec-puppet-facts',                                         :require => false
-  gem 'rspec',                                                      :require => false
-  gem 'puppet-blacksmith',                                          :require => false, :git => 'https://github.com/voxpupuli/puppet-blacksmith.git'
-  gem 'voxpupuli-release',                                          :require => false, :git => 'https://github.com/voxpupuli/voxpupuli-release-gem.git'
-  gem 'rubocop',                                                    :require => false
-  gem 'rspec-puppet-utils',                                         :require => false
-  gem 'puppetlabs_spec_helper',                                     :require => false
-  gem 'puppet-lint-absolute_classname-check',                       :require => false
-  gem 'puppet-lint-leading_zero-check',                             :require => false
-  gem 'puppet-lint-trailing_comma-check',                           :require => false
-  gem 'puppet-lint-version_comparison-check',                       :require => false
-  gem 'puppet-lint-classes_and_types_beginning_with_digits-check',  :require => false
-  gem 'puppet-lint-unquoted_string-check',                          :require => false
-  gem 'puppet-lint-variable_contains_upcase',                       :require => false
-end
+gem 'test-kitchen'
+gem 'kitchen-puppet', '>= 3.6.0'
+gem 'kitchen-vagrant'
+gem 'kitchen-zip', :git => 'https://github.com/red-gate/kitchen-zip', :branch => 'master'
 
-group :development do
-  gem 'travis',       :require => false
-  gem 'travis-lint',  :require => false
-  gem 'guard-rake',   :require => false
-end
+# We use serverspec to test the state of our servers
+gem 'serverspec', '~> 2'
 
-group :system_tests do
-  gem 'beaker',                        :require => false
-  if beaker_version = ENV['BEAKER_VERSION']
-    gem 'beaker', *location_for(beaker_version)
-  end
-  if beaker_rspec_version = ENV['BEAKER_RSPEC_VERSION']
-    gem 'beaker-rspec', *location_for(beaker_rspec_version)
-  else
-    gem 'beaker-rspec',  :require => false
-  end
-  gem 'beaker-puppet_install_helper',  :require => false
-end
+# We use rake as our build engine
+gem 'rake', '~> 13'
+# This gem tells us how long each rake task takes.
+gem 'rake-performance'
 
-
-
-if facterversion = ENV['FACTER_GEM_VERSION']
-gem 'facter', facterversion.to_s, :require => false, :groups => [:test]
-else
-gem 'facter', :require => false, :groups => [:test]
-end
-
-ENV['PUPPET_VERSION'].nil? ? puppetversion = '3.8.4' : puppetversion = ENV['PUPPET_VERSION'].to_s
-gem 'puppet', puppetversion, :require => false, :groups => [:test]
-
-# vim:ft=ruby
+gem 'r10k', '~> 3'

@@ -37,3 +37,5 @@ build/
 
 Gemfile.lock
 spec/fixtures/*
+.kitchen-modules/
+.kitchen/
