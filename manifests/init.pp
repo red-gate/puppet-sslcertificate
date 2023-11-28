@@ -44,7 +44,8 @@ define sslcertificate (
   String $store = 'LocalMachine\My',
   Boolean $exportable = false
 ) {
-  validate_re($thumbprint, '^(.)+$', "Must pass a certificate thumbprint to ${module_name}[${title}]")
+
+  validate_legacy(String, 'validate_re', '^(.)+$', "Must pass a certificate thumbprint to ${module_name}[${title}]")
 
   if ($exportable) {
     $exportable_flag = '-Exportable'
