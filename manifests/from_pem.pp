@@ -20,7 +20,8 @@ define sslcertificate::from_pem (
   String $key_content,
   String $store = 'LocalMachine\My',
   Boolean $exportable = false,
-  Boolean $remove_expired_certs = true
+  Boolean $remove_expired_certs = true,
+  Boolean $remove_immediately = false
 ) {
   require sslcertificate::openssl
 
@@ -35,6 +36,15 @@ define sslcertificate::from_pem (
     command   => template('sslcertificate/import_from_pem.ps1.erb'),
     onlyif    => template('sslcertificate/should_import_from_pem.ps1.erb'),
     logoutput => true,
+  }
+
+  if $remove_expired_certs {
+    exec { "${title}_RemoveExpiredCerts":
+      provider  => 'powershell',
+      command   => template('sslcertificate/remove_expired_certs.ps1.erb'),
+      onlyif    => template('sslcertificate/should_remove_expired_certs.ps1.erb'),
+      logoutput => true,
+    }
   }
 
   if $remove_expired_certs {

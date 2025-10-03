@@ -9,7 +9,11 @@ function Get-CertName($certificate) {
 $cert_cn = Get-CertName $cert
 
 function Test-ShouldBeRemoved($certificate) {
-    ($certificate.NotAfter -lt ((get-date).AddDays(-30))) -and (Get-CertName $certificate) -eq $cert_cn
+    if(<%= @remove_immediately %>) {
+        ($certificate.NotAfter -ne $cert.NotAfter) -and (Get-CertName $certificate) -eq $cert_cn
+    } else {
+        ($certificate.NotAfter -lt ((get-date).AddDays(-30))) -and (Get-CertName $certificate) -eq $cert_cn
+    }
 }
 
 Get-ChildItem Cert:\<%= @store %> | Where-Object { Test-ShouldBeRemoved $_ } | Remove-Item -Verbose
