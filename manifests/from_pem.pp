@@ -21,7 +21,7 @@ define sslcertificate::from_pem (
   String $store = 'LocalMachine\My',
   Boolean $exportable = false,
   Optional[Integer] $remove_expired_certs_after = 30, # Days,
-  # Default of "30", to keep the behaviour the same, "0" for immediate removal, "undef" to not remove.
+  # Default of "30", to keep the behaviour the same, "-1" for immediate removal, "undef" to not remove.
 ) {
   require sslcertificate::openssl
 
