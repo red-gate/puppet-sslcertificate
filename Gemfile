@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'puppet-lint'
 
-gem 'test-kitchen'
+gem 'test-kitchen', '< 3.8.0' # pin to pre 3.8.0 which introduced a change to how it uploads files which breaks ssh_tgz upload in the kitchen-zip module
 gem 'kitchen-puppet', '>= 3.6.0'
 gem 'kitchen-vagrant'
 gem 'kitchen-zip', :git => 'https://github.com/red-gate/kitchen-zip', :branch => 'master'
