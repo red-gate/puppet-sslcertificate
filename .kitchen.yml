@@ -65,15 +65,6 @@ platforms:
     transport:
       name: winrm
       winrm_transport: plaintext
-  - name: windows-2012r2
-    driver_plugin: vagrant
-    driver_config:
-      box: red-gate/windows-2012r2
-    provisioner:
-      puppet_version: "6.28.0"
-    transport:
-      name: winrm
-      winrm_transport: plaintext
 
 suites:
   - name: windows_tests
